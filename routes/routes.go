@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	userHandler "github.com/trakfy/backend/handlers/users"
+	"github.com/trakfy/backend/handlers"
 )
 
 func SetupRoutes(router *gin.Engine) {
@@ -14,5 +14,5 @@ func SetupRoutes(router *gin.Engine) {
 	})
 
 	userGroup := router.Group("/user")
-	userGroup.GET("/info", userHandler.UserInfo)
+	userGroup.GET("/", handlers.UserInfo)
 }
