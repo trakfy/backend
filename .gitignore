@@ -1,0 +1,42 @@
+# Go-specific files and directories
+bin/
+pkg/
+*.exe
+*.test
+*.out
+__debug_bin/
+
+# Go generated dependencies
+vendor/
+
+# Log files
+*.log
+
+# Sensitive configuration files
+config.ini
+secrets.json
+
+# Generated files and directories
+.idea/
+.vscode/
+*.iml
+*.swp
+.DS_Store
+
+# Build and cache files
+*.o
+*.a
+*.so
+*.test
+*.prof
+.cache/
+*.test/
+*.prof/
+
+# Environment files
+.env*
+!.env.example
+
+# Other files and directories
+logs/
+temp/

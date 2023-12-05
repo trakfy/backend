@@ -1,0 +1,35 @@
+name: Deploy Heroku
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-heroku:
+    environment: ${{ github.ref_name }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Copy Files
+        run: |
+          touch .env
+          echo JWT_SECRET="${{ secrets.JWT_SECRET }}" >> .env
+          echo DATABASE_URL="${{ secrets.DATABASE_URL }}" >> .env
+          cp .trakfy/Dockerfile Dockerfile
+
+      - name: Build, Push and Release a Docker container to Heroku
+        uses: gonuit/heroku-docker-deploy@v1.3.3
+        with:
+          email: ${{ secrets.HEROKU_EMAIL }}
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+          dockerfile_directory: ./
+          dockerfile_name: Dockerfile
+          docker_options: "--no-cache"
+          process_type: web
+          
