@@ -39,8 +39,11 @@ func UserInfo(c *gin.Context) {
 		user = userEntity
 	}
 
+	apis := GetApisByUserId(user.ID)
+
 	c.JSON(200, gin.H{
 		"id":    user.ID,
 		"email": user.Email,
+		"apis":  apis,
 	})
 }

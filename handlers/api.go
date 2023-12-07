@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/trakfy/backend/db"
 	"github.com/trakfy/backend/models"
 	"github.com/trakfy/backend/utils"
@@ -63,5 +64,14 @@ func CreateApi(c *gin.Context) {
 		"user_id": api.UserID,
 		"name":    api.Name,
 	})
+}
 
+func GetApisByUserId(userId uuid.UUID) ([]models.Api) {
+	var apis []models.Api
+	err := db.DB.Where("user_id = ?", userId).Find(&apis).Error
+	if err != nil {
+		return []models.Api{}
+	}
+
+	return apis
 }
