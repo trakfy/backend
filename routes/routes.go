@@ -35,4 +35,5 @@ func SetupRoutes(router *gin.Engine) {
 	apiKeyGroup := router.Group("/api_key")
 	apiKeyGroup.POST("/", handlers.CreateApiKey)
 	apiKeyGroup.PATCH("/renewal", handlers.RenewalApiKeyRoute)
+	apiKeyGroup.POST("/validate", handlers.ValidateKey)
 }
