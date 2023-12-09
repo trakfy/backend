@@ -43,6 +43,9 @@ func CreateApiKey(c *gin.Context) {
 		return
 	}
 
+	// verify api plan
+	// verify api subscription
+
 	apiKey := &models.ApiKey{}
 	err = db.DB.Where("user_id = ? AND api_id = ? and valid = true", user.ID, body.ApiID).First(apiKey).Error
 	if err == nil {

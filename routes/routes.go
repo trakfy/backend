@@ -22,6 +22,9 @@ func SetupRoutes(router *gin.Engine) {
 	apiPlanGroup := router.Group("/api_plan")
 	apiPlanGroup.POST("/", handlers.CreateApiPlan)
 
+	apiSubscriptionGroup := router.Group("/api_subscription")
+	apiSubscriptionGroup.POST("/", handlers.CreateApiSubscription)
+
 	apiKeyGroup := router.Group("/api_key")
 	apiKeyGroup.POST("/", handlers.CreateApiKey)
 }
