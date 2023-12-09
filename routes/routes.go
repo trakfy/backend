@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/robfig/cron/v3"
 	"github.com/trakfy/backend/handlers"
 )
 
@@ -13,6 +14,12 @@ func SetupRoutes(router *gin.Engine) {
 		})
 	})
 
+	// Crons
+	cron := cron.New()
+	cron.AddFunc("@daily", handlers.RenewalApiKeyCron)
+	cron.Start()
+
+	// Routes
 	userGroup := router.Group("/user")
 	userGroup.GET("/", handlers.UserInfo)
 
@@ -27,4 +34,5 @@ func SetupRoutes(router *gin.Engine) {
 
 	apiKeyGroup := router.Group("/api_key")
 	apiKeyGroup.POST("/", handlers.CreateApiKey)
+	apiKeyGroup.PATCH("/renewal", handlers.RenewalApiKeyRoute)
 }

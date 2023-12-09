@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -77,4 +78,28 @@ func CreateApiKey(c *gin.Context) {
 	}
 
 	c.JSON(200, apiKey)
+}
+
+func RenewalApiKeyRoute(c *gin.Context) {
+	RenewalApiKeyCron()
+	c.JSON(200, gin.H{"message": "ok"})
+}
+
+func RenewalApiKeyCron() {
+	fmt.Println("RenewalApiKey")
+
+	apiKeys := []models.ApiKey{}
+	err := db.DB.Where("renewal_date < ? AND valid = true", time.Now()).Find(&apiKeys).Error
+	if err != nil {
+		return
+	}
+
+	for _, apiKey := range apiKeys {
+		apiKey.QuotaUsed = 0
+		apiKey.RenewalDate = time.Now().AddDate(0, 1, 0)
+		err = db.DB.Save(apiKey).Error
+		if err != nil {
+			return
+		}
+	}
 }
