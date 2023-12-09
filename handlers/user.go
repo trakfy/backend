@@ -40,10 +40,12 @@ func UserInfo(c *gin.Context) {
 	}
 
 	apis := GetApisByUserId(user.ID)
+	subscriptions := GetApiSubscriptionsByUserId(user.ID)
 
 	c.JSON(200, gin.H{
-		"id":    user.ID,
-		"email": user.Email,
-		"apis":  apis,
+		"id":            user.ID,
+		"email":         user.Email,
+		"apis":          apis,
+		"subscriptions": subscriptions,
 	})
 }

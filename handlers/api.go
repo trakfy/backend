@@ -62,7 +62,7 @@ func CreateApi(c *gin.Context) {
 	c.JSON(200, api)
 }
 
-func GetApisByUserId(userId uuid.UUID) ([]models.Api) {
+func GetApisByUserId(userId uuid.UUID) []models.Api {
 	var apis []models.Api
 	err := db.DB.Where("user_id = ?", userId).Find(&apis).Error
 	if err != nil {

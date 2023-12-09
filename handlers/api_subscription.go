@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/trakfy/backend/db"
 	"github.com/trakfy/backend/models"
 	"github.com/trakfy/backend/utils"
@@ -47,6 +48,13 @@ func CreateApiSubscription(c *gin.Context) {
 		return
 	}
 
+	api := &models.Api{}
+	err = db.DB.Where("id = ?", apiPlan.ApiID).First(api).Error
+	if err != nil {
+		c.JSON(401, gin.H{"error": "Api not found"})
+		return
+	}
+
 	apiSubscription := &models.ApiSubscription{}
 	err = db.DB.Where("user_id = ? AND api_plan_id = ?", user.ID, body.ApiPlanID).First(apiSubscription).Error
 	if err == nil {
@@ -58,6 +66,7 @@ func CreateApiSubscription(c *gin.Context) {
 		ID:        utils.GenerateUUID(),
 		UserID:    user.ID,
 		ApiPlanID: apiPlan.ID,
+		ApiName:   api.Name,
 	}
 	err = db.DB.Create(apiSubscription).Error
 	if err != nil {
@@ -66,4 +75,14 @@ func CreateApiSubscription(c *gin.Context) {
 	}
 
 	c.JSON(200, apiSubscription)
+}
+
+func GetApiSubscriptionsByUserId(userId uuid.UUID) []models.ApiSubscription {
+	var apiSubscriptions []models.ApiSubscription
+	err := db.DB.Where("user_id = ?", userId).Find(&apiSubscriptions).Error
+	if err != nil {
+		return nil
+	}
+
+	return apiSubscriptions
 }

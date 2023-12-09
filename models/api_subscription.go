@@ -5,7 +5,8 @@ import (
 )
 
 type ApiSubscription struct {
-	ID           uuid.UUID `json:"id"`
-	UserID       uuid.UUID `json:"user_id"`
-	ApiPlanID    uuid.UUID `json:"api_plan_id"`
+	ID        uuid.UUID `json:"id"`
+	UserID    uuid.UUID `json:"user_id"`
+	ApiPlanID uuid.UUID `json:"api_plan_id"`
+	ApiName  string    `json:"api_name"`
 }
