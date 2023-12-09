@@ -69,13 +69,5 @@ func CreateApiKey(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, gin.H{
-		"id":           apiKey.ID,
-		"api_id":       apiKey.ApiID,
-		"user_id":      apiKey.UserID,
-		"key":          apiKey.Key,
-		"valid":        apiKey.Valid,
-		"quota_used":   apiKey.QuotaUsed,
-		"renewal_date": apiKey.RenewalDate,
-	})
+	c.JSON(200, apiKey)
 }
