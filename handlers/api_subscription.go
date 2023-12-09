@@ -47,7 +47,14 @@ func CreateApiSubscription(c *gin.Context) {
 		return
 	}
 
-	apiSubscription := &models.ApiSubscription{
+	apiSubscription := &models.ApiSubscription{}
+	err = db.DB.Where("user_id = ? AND api_plan_id = ?", user.ID, body.ApiPlanID).First(apiSubscription).Error
+	if err == nil {
+		c.JSON(401, gin.H{"error": "Api Subscription already exists"})
+		return
+	}
+
+	apiSubscription = &models.ApiSubscription{
 		ID:        utils.GenerateUUID(),
 		UserID:    user.ID,
 		ApiPlanID: apiPlan.ID,

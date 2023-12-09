@@ -11,7 +11,7 @@ import (
 )
 
 type CreateApiKeyRequest struct {
-	ApiID uuid.UUID `json:"api_id" binding:"required"`
+	ApiSubscriptionID uuid.UUID `json:"api_subscription_id" binding:"required"`
 }
 
 func CreateApiKey(c *gin.Context) {
@@ -43,11 +43,15 @@ func CreateApiKey(c *gin.Context) {
 		return
 	}
 
-	// verify api plan
-	// verify api subscription
+	apiSubscription := &models.ApiSubscription{}
+	err = db.DB.Where("id = ? AND user_id = ?", body.ApiSubscriptionID, user.ID).First(apiSubscription).Error
+	if err != nil {
+		c.JSON(401, gin.H{"error": "Api Subscription not found"})
+		return
+	}
 
 	apiKey := &models.ApiKey{}
-	err = db.DB.Where("user_id = ? AND api_id = ? and valid = true", user.ID, body.ApiID).First(apiKey).Error
+	err = db.DB.Where("user_id = ? AND api_subscription_id = ? and valid = true", user.ID, body.ApiSubscriptionID).First(apiKey).Error
 	if err == nil {
 		apiKey.Valid = false
 		err = db.DB.Save(apiKey).Error
@@ -58,13 +62,13 @@ func CreateApiKey(c *gin.Context) {
 	}
 
 	apiKey = &models.ApiKey{
-		ID:          utils.GenerateUUID(),
-		ApiID:       body.ApiID,
-		UserID:      user.ID,
-		Key:         utils.GenerateSHA256(),
-		Valid:       true,
-		QuotaUsed:   apiKey.QuotaUsed,
-		RenewalDate: time.Now().AddDate(0, 1, 0),
+		ID:                utils.GenerateUUID(),
+		ApiSubscriptionID: body.ApiSubscriptionID,
+		UserID:            user.ID,
+		Key:               utils.GenerateSHA256(),
+		Valid:             true,
+		QuotaUsed:         apiKey.QuotaUsed,
+		RenewalDate:       time.Now().AddDate(0, 1, 0),
 	}
 	err = db.DB.Create(apiKey).Error
 	if err != nil {

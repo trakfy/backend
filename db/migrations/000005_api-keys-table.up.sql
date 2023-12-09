@@ -1,6 +1,6 @@
 CREATE TABLE api_keys (
     id UUID PRIMARY KEY,
-    api_id UUID REFERENCES apis(id),
+    api_subscription_id UUID REFERENCES api_subscriptions(id),
     user_id UUID REFERENCES users(id),
     key VARCHAR(64) NOT NULL,
     valid BOOLEAN NOT NULL,
